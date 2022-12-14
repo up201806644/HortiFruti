@@ -15,12 +15,6 @@ sensor = []
 atuadores = []
 timer = []
 
-GPIO.setmode(GPIO.BOARD)
-
-GPIO.setup(11,GPIO.OUT)
-servo1 = GPIO:PWM(11,50)
-
-servo1.start(0)
 if __name__ == '__main__':
 
     check_params = modules.functions.start(sys.argv)
@@ -39,6 +33,13 @@ if __name__ == '__main__':
 
         print("Starting local execution...")
         modules.functions.initialize_real_sensors()
+        
+        GPIO.setmode(GPIO.BOARD)
+
+        GPIO.setup(11,GPIO.OUT)
+        servo1 = GPIO:PWM(11,50)
+
+        servo1.start(0)
 
         while True:
             
