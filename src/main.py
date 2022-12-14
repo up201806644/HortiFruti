@@ -37,7 +37,7 @@ if __name__ == '__main__':
         GPIO.setmode(GPIO.BOARD)
 
         GPIO.setup(11,GPIO.OUT)
-        servo1 = GPIO:PWM(11,50)
+        servo1 = GPIO.PWM(11,50)
 
         servo1.start(0)
 
