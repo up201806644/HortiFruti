@@ -1,8 +1,8 @@
 import colorama as cl
 import sys
 import os
-#VENTOINHA import RPi.GPIO as GPIO
-#VENTOINHA import time
+import RPi.GPIO as GPIO
+import time
 
 import modules.db_control
 import modules.database 
@@ -15,12 +15,12 @@ sensor = []
 atuadores = []
 timer = []
 
-#VENTOINHA GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)
 
-#VENTOINHA GPIO.setup(11,GPIO.OUT)
-#VENTOINHA servo1 = GPIO:PWM(11,50)
+GPIO.setup(11,GPIO.OUT)
+servo1 = GPIO:PWM(11,50)
 
-#VENTOINHA servo1.start(0)
+servo1.start(0)
 if __name__ == '__main__':
 
     check_params = modules.functions.start(sys.argv)
@@ -41,36 +41,54 @@ if __name__ == '__main__':
         modules.functions.initialize_real_sensors()
 
         while True:
-
-            time_date = modules.database.strftime("%Y-%m-%d %H:%M:%S", modules.database.gmtime())
-            # read temperature values
-            temp_value,gas_value,humidity_value,pressure_value = modules.functions.read_real_sensors("PT")
-
-            print(f"{temp_min} < {temp_value:.2f} < {temp_max}")
-
-            if (temp_value >= temp_max):
-                modules.functions.print_y("Door Open")
             
-#VENTOINHA              Door Open
-#VENTOINHA                  try:
-#VENTOINHA                     servo1.ChangeDutyCycle(7)
-#VENTOINHA                     time.sleep(0.5)
-#VENTOINHA                     servo1.ChangeDutyCycle(0)
-#VENTOINHA                 finally:
-#VENTOINHA                     servo1.stop()
-#VENTOINHA                     GPIO.cleanup()
+            try:
+                servo1.ChangeDutyCycle(7)
+                time.sleep(0.5)
+                servo1.ChangeDutyCycle(0)
+            finally:
+                servo1.stop()
+                GPIO.cleanup()
+            
+            time.sleep(2)
+            
+            try:
+                servo1.ChangeDutyCycle(2)
+                time.sleep(0.5)
+                servo1.ChangeDutyCycle(0)
+            finally:
+                servo1.stop()
+                GPIO.cleanup()
+
+#             time_date = modules.database.strftime("%Y-%m-%d %H:%M:%S", modules.database.gmtime())
+#             # read temperature values
+#             temp_value,gas_value,humidity_value,pressure_value = modules.functions.read_real_sensors("PT")
+
+#             print(f"{temp_min} < {temp_value:.2f} < {temp_max}")
+
+#             if (temp_value >= temp_max):
+#                 modules.functions.print_y("Door Open")
+            
+# #             Door Open
+#                 try:
+#                     servo1.ChangeDutyCycle(7)
+#                     time.sleep(0.5)
+#                     servo1.ChangeDutyCycle(0)
+#                 finally:
+#                     servo1.stop()
+#                     GPIO.cleanup()
                 
-            if (temp_value <= temp_min):
-                modules.functions.print_y("Door Close")
+#             if (temp_value <= temp_min):
+#                 modules.functions.print_y("Door Close")
                 
-#VENTOINHA            Door Close
-#VENTOINHA                try:
-#VENTOINHA                    servo1.ChangeDutyCycle(2)
-#VENTOINHA                    time.sleep(0.5)
-#VENTOINHA                    servo1.ChangeDutyCycle(0)
-#VENTOINHA                finally:
-#VENTOINHA                    servo1.stop()
-#VENTOINHA                    GPIO.cleanup()
+# #Door Close
+#                 try:
+#                     servo1.ChangeDutyCycle(2)
+#                     time.sleep(0.5)
+#                     servo1.ChangeDutyCycle(0)
+#                 finally:
+#                     servo1.stop()
+#                     GPIO.cleanup()
             
              # SAFETY DEBUG MODE, TO NOT FLOOD THE DATABASE
             if check_params == 1:
